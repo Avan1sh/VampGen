@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import {
   Navbar,
   NavbarBrand,
@@ -10,6 +11,8 @@ import {
   Link,
   Button,
 } from "@heroui/react";
+import AuthModal from './AuthModal';
+import { useAuth } from '@/hooks/useAuth';
 
 export const AcmeLogo = () => {
   return (
@@ -25,18 +28,29 @@ export const AcmeLogo = () => {
 };
 
 export default function App() {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
+  const { user, logout } = useAuth();
+
   const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
+    { name: "Home", href: "/" },
+    { name: "Generator", href: "#" },
+    { name: "Gallery", href: "#" },
+    { name: "About", href: "#" },
   ];
+
+  const handleLoginClick = () => {
+    setAuthModalMode('login');
+    setIsAuthModalOpen(true);
+  };
+
+  const handleAuthSuccess = () => {
+    setIsAuthModalOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <Navbar disableAnimation isBordered>
@@ -57,49 +71,111 @@ export default function App() {
           <p className="font-bold text-inherit">VampGen</p>
         </NavbarBrand>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link aria-current="page" color="warning" href="#">
-            Customers
+          <Link color="foreground" href="/">
+            Home
           </Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
-            Integrations
+            Generator
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            Gallery
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="#">
+            About
           </Link>
         </NavbarItem>
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="warning" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        {user ? (
+          <>
+            <NavbarItem className="hidden lg:flex">
+              <span className="text-foreground">Welcome, {user.firstName}!</span>
+            </NavbarItem>
+            <NavbarItem>
+              <Button 
+                color="danger" 
+                variant="flat"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </NavbarItem>
+          </>
+        ) : (
+          <NavbarItem>
+            <Button
+              variant="flat"
+              color="secondary"
+              onClick={handleLoginClick}
+            >
+              Login
+            </Button>
+          </NavbarItem>
+        )}
       </NavbarContent>
 
       <NavbarMenu>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link
               className="w-full"
-              color={
-                index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"
-              }
-              href="#"
+              color="foreground"
+              href={item.href}
               size="lg"
             >
-              {item}
+              {item.name}
             </Link>
           </NavbarMenuItem>
         ))}
+        
+        {/* Auth items in mobile menu */}
+        {user ? (
+          <>
+            <NavbarMenuItem>
+              <span className="w-full text-foreground text-lg">
+                Welcome, {user.firstName}!
+              </span>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Button
+                className="w-full justify-start"
+                color="danger"
+                variant="light"
+                onClick={handleLogout}
+                size="lg"
+              >
+                Logout
+              </Button>
+            </NavbarMenuItem>
+          </>
+        ) : (
+          <NavbarMenuItem>
+            <Button
+              className="w-full justify-start"
+              variant="light"
+              onClick={handleLoginClick}
+              size="lg"
+            >
+              Login
+            </Button>
+          </NavbarMenuItem>
+        )}
       </NavbarMenu>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        defaultMode={authModalMode}
+        onAuthSuccess={handleAuthSuccess}
+      />
     </Navbar>
   );
 }

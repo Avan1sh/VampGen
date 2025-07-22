@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
 import Navbar from '@/components/navbar'
+import { AuthProvider } from '@/hooks/useAuth'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -17,20 +19,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen bg-gray-100">
-          <Navbar />
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
-          </main>
-          
-          <footer className="bg-white border-t border-gray-200 mt-auto">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              <div className="text-center text-gray-500">
-                <p>&copy; 2025 Thrifty Vampire Generator. All rights reserved.</p>
+        <AuthProvider>
+          <div className="min-h-screen bg-gray-100">
+            <Navbar />
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {children}
+            </main>
+            
+            <footer className="bg-white border-t border-gray-200 mt-auto">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="text-center text-gray-500">
+                  <p>&copy; 2025 Thrifty Vampire Generator. All rights reserved.</p>
+                </div>
               </div>
-            </div>
-          </footer>
-        </div>
+            </footer>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   )
