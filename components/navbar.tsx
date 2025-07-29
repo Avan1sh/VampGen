@@ -1,7 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { Button } from '@heroui/button';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { 
+  Bars3Icon, 
+  XMarkIcon, 
+  ShoppingBagIcon, 
+  HeartIcon, 
+  MagnifyingGlassIcon,
+  UserIcon 
+} from '@heroicons/react/24/outline';
 import AuthModal from './AuthModal';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -26,9 +33,11 @@ export default function CustomNavbar() {
 
   const menuItems = [
     { name: "Home", href: "/" },
-    { name: "Generator", href: "#" },
-    { name: "Gallery", href: "#" },
-    { name: "About", href: "#" },
+    { name: "Collections", href: "/collections" },
+    { name: "Dark Academia", href: "/collections/dark-academia" },
+    { name: "Vampire Chic", href: "/collections/vampire-chic" },
+    { name: "Gothic Street", href: "/collections/gothic-street" },
+    { name: "Sale", href: "/sale" },
   ];
 
   const handleLoginClick = () => {
@@ -48,6 +57,21 @@ export default function CustomNavbar() {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleCartClick = () => {
+    // TODO: Open cart drawer or navigate to cart page
+    alert('Cart functionality coming soon!');
+  };
+
+  const handleWishlistClick = () => {
+    // TODO: Navigate to wishlist page
+    alert('Wishlist functionality coming soon!');
+  };
+
+  const handleSearchClick = () => {
+    // TODO: Open search modal or navigate to search page
+    alert('Search functionality coming soon!');
   };
 
   return (
@@ -82,8 +106,8 @@ export default function CustomNavbar() {
               </button>
             </div>
 
-            {/* Logo - Center on mobile, Left on desktop */}
-            <div className="flex items-center flex-1 sm:flex-initial justify-center sm:justify-start">
+            {/* Logo */}
+            <div className="flex items-center">
               <div className="flex items-center space-x-3">
                 <AcmeLogo />
                 <span className="font-bold text-xl text-white drop-shadow-lg">VampGen</span>
@@ -91,25 +115,64 @@ export default function CustomNavbar() {
             </div>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden sm:flex sm:items-center sm:space-x-8 flex-1 justify-center">
+            <div className="hidden lg:flex lg:items-center lg:space-x-6">
               {menuItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-white/90 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 drop-shadow-sm"
+                  className="text-white/90 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 drop-shadow-sm hover:bg-white/10"
                 >
                   {item.name}
                 </a>
               ))}
             </div>
 
-            {/* Auth Section */}
-            <div className="flex items-center space-x-4">
+            {/* Right side actions */}
+            <div className="flex items-center space-x-3">
+              {/* Search Button */}
+              <button
+                onClick={handleSearchClick}
+                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors duration-200"
+                title="Search"
+              >
+                <MagnifyingGlassIcon className="h-5 w-5" />
+              </button>
+
+              {/* Wishlist Button */}
+              <button
+                onClick={handleWishlistClick}
+                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors duration-200 relative"
+                title="Wishlist"
+              >
+                <HeartIcon className="h-5 w-5" />
+                {/* Wishlist count badge */}
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  2
+                </span>
+              </button>
+
+              {/* Cart Button */}
+              <button
+                onClick={handleCartClick}
+                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors duration-200 relative"
+                title="Shopping Cart"
+              >
+                <ShoppingBagIcon className="h-5 w-5" />
+                {/* Cart count badge */}
+                <span className="absolute -top-1 -right-1 bg-purple-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  3
+                </span>
+              </button>
+
+              {/* Auth Section */}
               {user ? (
-                <>
-                  <span className="hidden lg:inline-block text-white/90 text-sm drop-shadow-sm">
-                    Welcome, {user.firstName}!
-                  </span>
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 p-2 rounded-lg bg-white/10">
+                    <UserIcon className="h-4 w-4 text-white/80" />
+                    <span className="hidden md:inline-block text-white/90 text-sm drop-shadow-sm">
+                      {user.firstName}
+                    </span>
+                  </div>
                   <Button 
                     color="danger" 
                     variant="flat"
@@ -119,7 +182,7 @@ export default function CustomNavbar() {
                   >
                     Logout
                   </Button>
-                </>
+                </div>
               ) : (
                 <Button
                   variant="flat"
@@ -138,8 +201,9 @@ export default function CustomNavbar() {
 
         {/* Mobile menu */}
         {isMobileMenuOpen && (
-          <div className="sm:hidden border-t border-white/20 bg-black/50 backdrop-blur-sm">
+          <div className="lg:hidden border-t border-white/20 bg-black/50 backdrop-blur-sm">
             <div className="px-2 pt-2 pb-3 space-y-1">
+              {/* Navigation Links */}
               {menuItems.map((item) => (
                 <a
                   key={item.name}
@@ -151,11 +215,48 @@ export default function CustomNavbar() {
                 </a>
               ))}
               
+              {/* Mobile Shopping Actions */}
+              <div className="pt-2 border-t border-white/20 space-y-2">
+                <button
+                  onClick={() => {
+                    handleSearchClick();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-white/90 hover:text-white hover:bg-purple-600/30 transition-colors duration-200 drop-shadow-sm"
+                >
+                  <MagnifyingGlassIcon className="h-5 w-5 mr-3" />
+                  Search Products
+                </button>
+                
+                <button
+                  onClick={() => {
+                    handleWishlistClick();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-white/90 hover:text-white hover:bg-purple-600/30 transition-colors duration-200 drop-shadow-sm"
+                >
+                  <HeartIcon className="h-5 w-5 mr-3" />
+                  Wishlist (2)
+                </button>
+                
+                <button
+                  onClick={() => {
+                    handleCartClick();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-white/90 hover:text-white hover:bg-purple-600/30 transition-colors duration-200 drop-shadow-sm"
+                >
+                  <ShoppingBagIcon className="h-5 w-5 mr-3" />
+                  Shopping Cart (3)
+                </button>
+              </div>
+              
               {/* Mobile Auth */}
               <div className="pt-4 border-t border-white/20">
                 {user ? (
                   <>
-                    <div className="px-3 py-2 text-sm text-white/90 drop-shadow-sm">
+                    <div className="flex items-center px-3 py-2 text-sm text-white/90 drop-shadow-sm">
+                      <UserIcon className="h-4 w-4 mr-2" />
                       Welcome, {user.firstName}!
                     </div>
                     <button
@@ -170,7 +271,7 @@ export default function CustomNavbar() {
                     onClick={handleLoginClick}
                     className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-600/30 transition-colors duration-200 drop-shadow-sm"
                   >
-                    Login
+                    Login / Sign Up
                   </button>
                 )}
               </div>
