@@ -41,7 +41,7 @@ export const sliderProducts: Product[] = [
     name: "Vampire Crown Necklace",
     price: "$39.99",
     originalPrice: "$59.99",
-    image: "/api/placeholder/600/400",
+    image: "/images/Product/vampire-crown-necklace.png",
     category: "Accessories",
     description: "Stunning crown necklace to complete your vampire ensemble"
   }

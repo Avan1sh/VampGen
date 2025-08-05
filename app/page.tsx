@@ -31,21 +31,24 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-gray-900 via-purple-900 to-black">
-      {/* Hero Section */}
-      <Hero isVisible={isVisible} />
+    <div className="min-h-screen w-full bg-gradient-to-b from-gray-900 via-purple-900 to-black relative">
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <Hero isVisible={isVisible} />
 
-      {/* Product Slider Section */}
-      <ProductSlider products={sliderProducts} onShopNow={handleShopNow} />
+        {/* Product Slider Section */}
+        <ProductSlider products={sliderProducts} onShopNow={handleShopNow} />
 
-      {/* Categories Section */}
-      <Categories categories={categories} isVisible={isVisible} />
+        {/* Categories Section */}
+        <Categories categories={categories} isVisible={isVisible} />
 
-      {/* Featured Products Grid */}
-      <ProductGrid products={sliderProducts} isVisible={isVisible} />
+        {/* Featured Products Grid */}
+        <ProductGrid products={sliderProducts} isVisible={isVisible} />
 
-      {/* Call to Action Section */}
-      <CallToAction isAuthenticated={isAuthenticated} onShopNow={handleShopNow} />
+        {/* Call to Action Section */}
+        <CallToAction isAuthenticated={isAuthenticated} onShopNow={handleShopNow} />
+      </div>
 
       {/* Auth Modal */}
       <AuthModal
