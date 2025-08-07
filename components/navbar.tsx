@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Button } from '@heroui/button';
+import Link from 'next/link';
 import { 
   Bars3Icon, 
   XMarkIcon, 
@@ -33,10 +34,8 @@ export default function CustomNavbar() {
 
   const menuItems = [
     { name: "Home", href: "/" },
+    { name: "Products", href: "/products" },
     { name: "Collections", href: "/collections" },
-    { name: "Dark Academia", href: "/collections/dark-academia" },
-    { name: "Vampire Chic", href: "/collections/vampire-chic" },
-    { name: "Gothic Street", href: "/collections/gothic-street" },
     { name: "Sale", href: "/sale" },
   ];
 
@@ -108,22 +107,22 @@ export default function CustomNavbar() {
 
             {/* Logo */}
             <div className="flex items-center">
-              <div className="flex items-center space-x-3">
+              <Link href="/" className="flex items-center space-x-3">
                 <AcmeLogo />
                 <span className="font-bold text-xl text-white drop-shadow-lg">VampGen</span>
-              </div>
+              </Link>
             </div>
 
             {/* Desktop Navigation Links */}
             <div className="hidden lg:flex lg:items-center lg:space-x-6">
               {menuItems.map((item) => (
-                <a
+                <Link
                   key={item.name}
                   href={item.href}
                   className="text-white/90 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 drop-shadow-sm hover:bg-white/10"
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
             </div>
 
@@ -205,14 +204,14 @@ export default function CustomNavbar() {
             <div className="px-2 pt-2 pb-3 space-y-1">
               {/* Navigation Links */}
               {menuItems.map((item) => (
-                <a
+                <Link
                   key={item.name}
                   href={item.href}
                   className="block px-3 py-2 rounded-md text-base font-medium text-white/90 hover:text-white hover:bg-purple-600/30 transition-colors duration-200 drop-shadow-sm"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
               
               {/* Mobile Shopping Actions */}
