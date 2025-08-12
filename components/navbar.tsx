@@ -58,11 +58,6 @@ export default function CustomNavbar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleCartClick = () => {
-    // TODO: Open cart drawer or navigate to cart page
-    alert('Cart functionality coming soon!');
-  };
-
   const handleWishlistClick = () => {
     // TODO: Navigate to wishlist page
     alert('Wishlist functionality coming soon!');
@@ -151,8 +146,8 @@ export default function CustomNavbar() {
               </button>
 
               {/* Cart Button */}
-              <button
-                onClick={handleCartClick}
+              <Link
+                href="/cart"
                 className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors duration-200 relative"
                 title="Shopping Cart"
               >
@@ -161,7 +156,7 @@ export default function CustomNavbar() {
                 <span className="absolute -top-1 -right-1 bg-purple-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                   3
                 </span>
-              </button>
+              </Link>
 
               {/* Auth Section */}
               {user ? (
@@ -238,16 +233,14 @@ export default function CustomNavbar() {
                   Wishlist (2)
                 </button>
                 
-                <button
-                  onClick={() => {
-                    handleCartClick();
-                    setIsMobileMenuOpen(false);
-                  }}
+                <Link
+                  href="/cart"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-white/90 hover:text-white hover:bg-purple-600/30 transition-colors duration-200 drop-shadow-sm"
                 >
                   <ShoppingBagIcon className="h-5 w-5 mr-3" />
                   Shopping Cart (3)
-                </button>
+                </Link>
               </div>
               
               {/* Mobile Auth */}
