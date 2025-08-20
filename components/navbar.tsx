@@ -58,11 +58,6 @@ export default function CustomNavbar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleWishlistClick = () => {
-    // TODO: Navigate to wishlist page
-    alert('Wishlist functionality coming soon!');
-  };
-
   const handleSearchClick = () => {
     // TODO: Open search modal or navigate to search page
     alert('Search functionality coming soon!');
@@ -133,17 +128,17 @@ export default function CustomNavbar() {
               </button>
 
               {/* Wishlist Button */}
-              <button
-                onClick={handleWishlistClick}
+              <Link
+                href="/wishlist"
                 className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors duration-200 relative"
                 title="Wishlist"
               >
                 <HeartIcon className="h-5 w-5" />
                 {/* Wishlist count badge */}
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                  2
+                  5
                 </span>
-              </button>
+              </Link>
 
               {/* Cart Button */}
               <Link
@@ -222,16 +217,14 @@ export default function CustomNavbar() {
                   Search Products
                 </button>
                 
-                <button
-                  onClick={() => {
-                    handleWishlistClick();
-                    setIsMobileMenuOpen(false);
-                  }}
+                <Link
+                  href="/wishlist"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-white/90 hover:text-white hover:bg-purple-600/30 transition-colors duration-200 drop-shadow-sm"
                 >
                   <HeartIcon className="h-5 w-5 mr-3" />
-                  Wishlist (2)
-                </button>
+                  Wishlist (5)
+                </Link>
                 
                 <Link
                   href="/cart"
