@@ -260,6 +260,33 @@ export const sliderProducts: Product[] = [
     image: "/api/placeholder/400/400",
     category: "Accessories",
     description: "Ornate tiara with black gems and gothic details"
+  },
+  {
+    id: 29,
+    name: "Phantom Opera Mask",
+    price: "$54.99",
+    originalPrice: "$74.99",
+    image: "/api/placeholder/400/400",
+    category: "Accessories",
+    description: "Elegant masquerade mask with gothic embellishments"
+  },
+  {
+    id: 30,
+    name: "Midnight Velvet Leggings",
+    price: "$39.99",
+    originalPrice: "$54.99",
+    image: "/api/placeholder/400/400",
+    category: "Bottoms",
+    description: "High-waisted velvet leggings with gothic lace panels"
+  },
+  {
+    id: 31,
+    name: "Necromancer's Hooded Cloak",
+    price: "$179.99",
+    originalPrice: "$239.99",
+    image: "/api/placeholder/400/400",
+    category: "Outerwear",
+    description: "Full-length hooded cloak with mystical runic patterns"
   }
 ];
 
