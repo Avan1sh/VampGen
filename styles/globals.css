@@ -1,3 +1,93 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom Gothic Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #8B0000 0%, #4B0000 50%, #2B0000 100%);
+  border-radius: 10px;
+  border: 2px solid #1a1a1a;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 10px rgba(139, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #B22222 0%, #8B0000 50%, #4B0000 100%);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 15px rgba(178, 34, 34, 0.5);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #DC143C 0%, #B22222 50%, #8B0000 100%);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 20px rgba(220, 20, 60, 0.7);
+}
+
+::-webkit-scrollbar-corner {
+  background: #1a1a1a;
+}
+
+/* Firefox Scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #8B0000 #1a1a1a;
+}
+
+/* Custom scrollbar for specific elements */
+.gothic-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.gothic-scroll::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.8);
+  border-radius: 6px;
+}
+
+.gothic-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #8B0000 0%, #4B0000 100%);
+  border-radius: 6px;
+  border: 1px solid #1a1a1a;
+}
+
+.gothic-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #B22222 0%, #8B0000 100%);
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Gothic glow effect for scrollbar */
+@keyframes scrollGlow {
+  0% { box-shadow: 0 0 5px rgba(139, 0, 0, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(178, 34, 34, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(139, 0, 0, 0.3); }
+}
+
+::-webkit-scrollbar-thumb {
+  animation: scrollGlow 3s ease-in-out infinite;
+}
+
+/* Hide scrollbar for certain elements while keeping scroll functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
