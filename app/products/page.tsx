@@ -62,7 +62,7 @@ export default function ProductsPage() {
     })
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-black">
+    <div className="min-h-screen bg-transparent">
       {/* Hero Section */}
       <div className="relative py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">

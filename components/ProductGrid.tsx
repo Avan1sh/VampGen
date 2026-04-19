@@ -32,12 +32,12 @@ export default function ProductGrid({ products, isVisible, showHeader = true, sh
   }
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-purple-900 to-black">
+    <section className="py-20 px-4 bg-transparent">
       <div className="max-w-7xl mx-auto">
         {showHeader && (
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              Featured <span className="bg-gradient-to-r from-red-400 to-purple-400 bg-clip-text text-transparent">Products</span>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 bg-gradient-to-br from-white to-purple-300 bg-clip-text text-transparent drop-shadow-sm">
+              Featured Products
             </h2>
             <p className="text-gray-300 text-lg max-w-2xl mx-auto">
               Discover our curated collection of dark fashion pieces that embody elegance, mystery, and timeless gothic style.
@@ -57,8 +57,8 @@ export default function ProductGrid({ products, isVisible, showHeader = true, sh
               <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 relative">
                 
                 {/* Discount Badge */}
-                <div className="absolute top-3 left-3 z-10">
-                  <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-200 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
                     -{calculateDiscount(product.originalPrice, product.price)}%
                   </span>
                 </div>
@@ -113,45 +113,44 @@ export default function ProductGrid({ products, isVisible, showHeader = true, sh
                 </div>
 
                 {/* Product Info */}
-                <div className="p-6">
-                  {/* Category & Rating */}
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-purple-400 font-medium">{product.category}</span>
-                    <div className="flex items-center space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon key={i} className={`h-3 w-3 ${i < 4 ? 'text-yellow-400' : 'text-gray-600'}`} />
-                      ))}
-                      <span className="text-xs text-gray-400 ml-1">(4.0)</span>
+                <div className="p-6 flex flex-col flex-grow justify-between">
+                  <div>
+                    {/* Category & Rating */}
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-xs tracking-wider text-purple-300 uppercase font-semibold">{product.category}</span>
+                      <div className="flex items-center space-x-1 border border-white/10 px-2 py-0.5 rounded-full bg-black/20">
+                        <StarIcon className="h-3 w-3 text-yellow-400" />
+                        <span className="text-xs text-gray-300 ml-1">4.0</span>
+                      </div>
                     </div>
+
+                    {/* Product Name */}
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors line-clamp-2">
+                      {product.name}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-400 mb-6 line-clamp-2 leading-relaxed">
+                      {product.description}
+                    </p>
                   </div>
 
-                  {/* Product Name */}
-                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-purple-300 transition-colors line-clamp-2">
-                    {product.name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  {/* Price Section */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl font-bold text-red-400">{product.price}</span>
-                      <span className="text-sm text-gray-500 line-through">{product.originalPrice}</span>
+                  <div>
+                    {/* Price Section */}
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-black text-white">{product.price}</span>
+                        <span className="text-sm text-purple-300/60 line-through">{product.originalPrice}</span>
+                      </div>
+                      <span className="text-xs text-emerald-400/90 font-medium px-2 py-1 bg-emerald-400/10 rounded-full border border-emerald-400/20">In Stock</span>
                     </div>
-                    <span className="text-xs text-green-400 font-medium">In Stock</span>
-                  </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex space-x-2">
-                    <button className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 transition-all duration-200 transform hover:scale-105">
-                      Add to Cart
-                    </button>
-                    <button className="px-4 py-2 border border-purple-500 text-purple-400 rounded-lg hover:bg-purple-500 hover:text-white transition-colors duration-200">
-                      <EyeIcon className="h-4 w-4" />
-                    </button>
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      <button className="flex-1 bg-gradient-to-r from-purple-600 to-purple-800 border border-purple-500/50 text-white py-2.5 px-4 rounded-xl font-bold hover:from-purple-500 hover:to-purple-700 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all duration-300 transform hover:-translate-y-1">
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -161,10 +160,10 @@ export default function ProductGrid({ products, isVisible, showHeader = true, sh
 
         {/* View All Products Button */}
         {showViewAllButton && (
-          <div className="text-center mt-12">
+          <div className="text-center mt-16">
             <Link 
               href="/products"
-              className="inline-block px-8 py-3 bg-gradient-to-r from-red-600 to-purple-600 text-white font-semibold rounded-lg hover:from-red-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="inline-block px-10 py-4 bg-white/5 backdrop-blur-md border border-purple-500/30 text-purple-100 font-bold tracking-wide rounded-full hover:bg-white/10 hover:border-purple-400 hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all duration-300 transform hover:-translate-y-1"
             >
               View All Products
             </Link>

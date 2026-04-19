@@ -22,15 +22,15 @@ export default function ProductSlider({ products, onShopNow }: ProductSliderProp
   }, [products.length])
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-purple-900 to-black">
+    <section className="py-20 px-4 bg-transparent">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-16 text-white">
-          Featured <span className="bg-gradient-to-r from-purple-400 to-red-400 bg-clip-text text-transparent">Products</span>
+        <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-16 bg-gradient-to-br from-white to-purple-300 bg-clip-text text-transparent drop-shadow-sm text-center">
+          Featured Products
         </h2>
         
         {/* Slider Container */}
         <div className="relative max-w-4xl mx-auto">
-          <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-gray-800 to-gray-900 border border-purple-500/20">
+          <div className="overflow-hidden rounded-3xl bg-black/40 backdrop-blur-md border border-white/5 shadow-[0_0_30px_rgba(168,85,247,0.1)]">
             <div 
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -39,7 +39,7 @@ export default function ProductSlider({ products, onShopNow }: ProductSliderProp
                 <div key={product.id} className="w-full flex-shrink-0">
                   <div className="flex flex-col md:flex-row">
                     {/* Product Image */}
-                    <div className="md:w-1/2 h-80 md:h-[28rem] bg-gradient-to-b from-purple-800/20 to-gray-800 flex items-center justify-center overflow-hidden">
+                    <div className="md:w-1/2 h-80 md:h-[28rem] bg-black/40 flex items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-white/5">
                       {product.image.startsWith('/api/placeholder') ? (
                         <div className="text-8xl opacity-50">🧛‍♀️</div>
                       ) : (
@@ -60,20 +60,20 @@ export default function ProductSlider({ products, onShopNow }: ProductSliderProp
                     </div>
                     
                     {/* Product Info */}
-                    <div className="md:w-1/2 p-8 flex flex-col justify-center">
-                      <div className="text-sm text-purple-400 mb-2">{product.category}</div>
-                      <h3 className="text-3xl font-bold text-white mb-4">{product.name}</h3>
-                      <p className="text-gray-300 mb-6 leading-relaxed">{product.description}</p>
+                    <div className="md:w-1/2 p-10 flex flex-col justify-center bg-gradient-to-br from-white/[0.02] to-transparent">
+                      <div className="text-xs tracking-wider text-purple-300 uppercase font-semibold mb-3">{product.category}</div>
+                      <h3 className="text-4xl font-bold text-white mb-4">{product.name}</h3>
+                      <p className="text-gray-400 mb-8 leading-relaxed text-lg">{product.description}</p>
                       
-                      <div className="flex items-center gap-4 mb-6">
-                        <span className="text-3xl font-bold text-red-400">{product.price}</span>
-                        <span className="text-lg text-gray-500 line-through">{product.originalPrice}</span>
+                      <div className="flex items-center gap-4 mb-8">
+                        <span className="text-4xl font-black text-white">{product.price}</span>
+                        <span className="text-xl text-purple-300/60 line-through">{product.originalPrice}</span>
                       </div>
                       
                       <div className="flex gap-4">
                         <Button
                           size="lg"
-                          className="bg-gradient-to-r from-purple-600 to-red-600 hover:from-purple-700 hover:to-red-700 text-white font-semibold px-6 py-3 rounded-full transform hover:scale-105 transition-all duration-300"
+                          className="flex-1 bg-gradient-to-r from-purple-600 to-purple-800 border border-purple-500/50 text-white py-3 px-6 rounded-xl font-bold hover:from-purple-500 hover:to-purple-700 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all duration-300 transform hover:-translate-y-1"
                           onClick={onShopNow}
                         >
                           Shop Now
@@ -81,7 +81,7 @@ export default function ProductSlider({ products, onShopNow }: ProductSliderProp
                         <Button
                           variant="bordered"
                           size="lg"
-                          className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black px-6 py-3 rounded-full transition-all duration-300"
+                          className="flex-1 border border-white/20 text-white hover:bg-white/10 hover:border-white/30 px-6 py-3 rounded-xl font-bold transition-all duration-300"
                         >
                           Add to Cart
                         </Button>

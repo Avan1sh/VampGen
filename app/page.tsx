@@ -36,26 +36,26 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-gray-900 via-purple-900 to-black relative">
+    <div className="min-h-screen w-full bg-transparent relative">
       {/* Content */}
       <div className="relative z-10">
         {/* Hero Section */}
         <Hero isVisible={isVisible} />
 
-        {/* Product Slider Section */}
-        <ProductSlider products={sliderProducts.slice(0, 4)} onShopNow={handleShopNow} />
-
-        {/* Featured Categories */}
-        <FeaturedCategories categories={categories} isVisible={isVisible} />
-
         {/* Featured Products Grid */}
         <ProductGrid products={featuredProducts} isVisible={isVisible} />
+
+        {/* New Arrivals Section */}
+        <NewArrivals products={sliderProducts} isVisible={isVisible} />
+
+        {/* Product Slider Section */}
+        <ProductSlider products={sliderProducts.slice(0, 4)} onShopNow={handleShopNow} />
 
         {/* Stats Section */}
         <StatsSection />
 
-        {/* New Arrivals Section */}
-        <NewArrivals products={sliderProducts} isVisible={isVisible} />
+        {/* Featured Categories */}
+        <FeaturedCategories categories={categories} isVisible={isVisible} />
 
         {/* Call to Action Section */}
         <CallToAction isAuthenticated={isAuthenticated} onShopNow={handleShopNow} />

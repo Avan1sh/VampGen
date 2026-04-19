@@ -32,7 +32,7 @@ export default function NewArrivals({ products, isVisible }: NewArrivalsProps) {
   }
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black">
+    <section className="py-20 px-4 bg-transparent">
       <div className="max-w-7xl mx-auto">
         <div className={`text-center mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'
@@ -49,12 +49,12 @@ export default function NewArrivals({ products, isVisible }: NewArrivalsProps) {
           {newProducts.map((product, index) => (
             <div
               key={product.id}
-              className={`group cursor-pointer transition-all duration-500 hover:scale-105 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+              className={`group cursor-pointer transition-all duration-500 hover:scale-105 h-full flex flex-col ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
               style={{ transitionDelay: `${index * 100}ms` }}
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
             >
-              <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden border border-gray-700 hover:border-green-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/20 relative">
+              <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl overflow-hidden border border-gray-700 hover:border-green-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/20 relative flex flex-col h-full w-full">
                 
                 {/* New Badge */}
                 <div className="absolute top-3 left-3 z-10">
@@ -120,7 +120,7 @@ export default function NewArrivals({ products, isVisible }: NewArrivalsProps) {
                 </div>
 
                 {/* Product Info */}
-                <div className="p-6">
+                <div className="p-6 flex flex-col flex-grow">
                   {/* Category & Rating */}
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm text-green-400 font-medium">{product.category}</span>
@@ -143,7 +143,7 @@ export default function NewArrivals({ products, isVisible }: NewArrivalsProps) {
                   </p>
 
                   {/* Price Section */}
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-4 mt-auto">
                     <div className="flex items-center gap-2">
                       <span className="text-xl font-bold text-red-400">{product.price}</span>
                       <span className="text-sm text-gray-500 line-through">{product.originalPrice}</span>

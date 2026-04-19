@@ -97,9 +97,11 @@ export default function CustomNavbar() {
 
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-3">
-                <AcmeLogo />
-                <span className="font-bold text-xl text-white drop-shadow-lg">VampGen</span>
+              <Link href="/" className="flex items-center space-x-3 group">
+                <div className="text-white group-hover:text-purple-400 transition-colors duration-300">
+                  <AcmeLogo />
+                </div>
+                <span className="font-bold text-2xl tracking-widest bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">VAMPGEN</span>
               </Link>
             </div>
 
@@ -109,7 +111,7 @@ export default function CustomNavbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-white/90 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 drop-shadow-sm hover:bg-white/10"
+                  className="text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/5 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] border border-transparent hover:border-white/10"
                 >
                   {item.name}
                 </Link>
@@ -174,11 +176,10 @@ export default function CustomNavbar() {
                 </div>
               ) : (
                 <Button
-                  variant="flat"
-                  color="secondary"
+                  variant="bordered"
                   size="sm"
                   onClick={handleLoginClick}
-                  className="bg-purple-600/80 hover:bg-purple-600 text-white border-purple-500/50"
+                  className="border border-purple-500/50 text-purple-300 hover:bg-purple-900/40 hover:text-white hover:border-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.5)] transition-all duration-300"
                 >
                   Login
                 </Button>

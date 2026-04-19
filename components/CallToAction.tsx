@@ -9,7 +9,7 @@ interface CallToActionProps {
 
 export default function CallToAction({ isAuthenticated, onShopNow }: CallToActionProps) {
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-black via-purple-900 to-gray-900">
+    <section className="py-20 px-4 bg-transparent">
       <div className="max-w-4xl mx-auto text-center">
         <div className="bg-gradient-to-r from-purple-900/50 to-red-900/50 rounded-3xl p-12 border border-purple-500/30 backdrop-blur-sm">
           <h2 className="text-4xl font-bold text-white mb-6">
