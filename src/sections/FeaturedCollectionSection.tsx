@@ -1,64 +1,9 @@
 import { useRef } from 'react';
+import { Link } from 'react-router';
 import { motion, useInView } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
-import { parsePrice } from '@/types/product';
-
-const products = [
-  {
-    id: 'midnight-velvet-coat',
-    name: 'Midnight Velvet Coat',
-    category: 'Outerwear',
-    price: '$129.99',
-    originalPrice: '$179.99',
-    image: '/images/lookbook-midnight-velvet.jpg',
-    large: true,
-  },
-  {
-    id: 'gothic-rose-dress',
-    name: 'Gothic Rose Dress',
-    category: 'Dresses',
-    price: '$89.99',
-    originalPrice: '$119.99',
-    image: '/images/lookbook-gothic-rose.jpg',
-    large: false,
-  },
-  {
-    id: 'vampire-crown-necklace',
-    name: 'Vampire Crown Necklace',
-    category: 'Accessories',
-    price: '$39.99',
-    originalPrice: '$59.99',
-    image: '/images/featured-vampire-necklace.jpg',
-    large: false,
-  },
-  {
-    id: 'dark-academia-blazer',
-    name: 'Dark Academia Blazer',
-    category: 'Formal',
-    price: '$149.99',
-    originalPrice: '$199.99',
-    image: '/images/lookbook-dark-academia.jpg',
-    large: false,
-  },
-  {
-    id: 'shadow-silk-corset',
-    name: 'Shadow Silk Corset',
-    category: 'Lingerie',
-    price: '$79.99',
-    originalPrice: '$109.99',
-    image: '/images/featured-shadow-corset.jpg',
-    large: false,
-  },
-  {
-    id: 'blackthorn-leather-jacket',
-    name: 'Blackthorn Leather Jacket',
-    category: 'Outerwear',
-    price: '$189.99',
-    originalPrice: '$249.99',
-    image: '/images/featured-leather-jacket.jpg',
-    large: true,
-  },
-];
+import { featuredProducts } from '@/data/products';
+import { formatPrice, type Product } from '@/types/product';
 
 const headingVariants = {
   hidden: { opacity: 0 },
@@ -80,9 +25,7 @@ const slideFromRight = {
 const cardContainerVariants = {
   hidden: {},
   visible: {
-    transition: {
-      staggerChildren: 0.12,
-    },
+    transition: { staggerChildren: 0.12 },
   },
 };
 
@@ -99,11 +42,8 @@ export default function FeaturedCollectionSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
-  // Split products for asymmetric layout
-  const row1Left = products[0]; // Large
-  const row1Right = [products[1], products[2]]; // Standard x2
-  const row2Left = [products[3], products[4]]; // Standard x2
-  const row2Right = products[5]; // Large
+  // Asymmetric layout: large, [standard, standard], [standard, standard], large
+  const [a, b, c, d, e, f] = featuredProducts.slice(0, 6);
 
   return (
     <section id="featured" className="bg-void py-24 lg:py-32" ref={sectionRef}>
@@ -147,23 +87,21 @@ export default function FeaturedCollectionSection() {
         >
           {/* Row 1: Large left + 2 standard right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ProductCard product={row1Left} />
+            <ProductCard product={a} large />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {row1Right.map((product, i) => (
-                <ProductCard key={i} product={product} />
-              ))}
+              <ProductCard product={b} />
+              <ProductCard product={c} />
             </div>
           </div>
 
           {/* Row 2: 2 standard left + Large right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 order-2 lg:order-1">
-              {row2Left.map((product, i) => (
-                <ProductCard key={i} product={product} />
-              ))}
+              <ProductCard product={d} />
+              <ProductCard product={e} />
             </div>
             <div className="order-1 lg:order-2">
-              <ProductCard product={row2Right} />
+              <ProductCard product={f} large />
             </div>
           </div>
         </motion.div>
@@ -172,74 +110,57 @@ export default function FeaturedCollectionSection() {
   );
 }
 
-function ProductCard({
-  product,
-}: {
-  product: (typeof products)[0];
-}) {
+function ProductCard({ product, large = false }: { product: Product; large?: boolean }) {
   const { addItem } = useCart();
+  const defaultSize = product.sizes.includes('M') ? 'M' : product.sizes[0];
 
   return (
     <motion.div
       variants={cardVariants}
       className={`group relative bg-crypt border border-white/5 rounded-lg overflow-hidden ${
-        product.large ? 'row-span-2' : ''
+        large ? 'row-span-2' : ''
       }`}
     >
+      {/* Stretched link for navigation */}
+      <Link to={`/product/${product.id}`} aria-label={`View ${product.name}`} className="absolute inset-0 z-10" />
+
       {/* Image */}
       <div className="relative overflow-hidden">
         <img
-          src={product.image}
+          src={product.images[0]}
           alt={product.name}
           className={`w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 ${
-            product.large ? 'h-[24rem] lg:h-[32rem]' : 'h-64 lg:h-80'
+            large ? 'h-[24rem] lg:h-[32rem]' : 'h-64 lg:h-80'
           }`}
           loading="lazy"
         />
-        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-crypt via-transparent to-transparent" />
       </div>
 
       {/* Product Info */}
-      <div className="p-6">
-        <span className="font-inter text-xs uppercase tracking-[0.2em] text-ember">
-          {product.category}
-        </span>
+      <div className="relative p-6">
+        <span className="font-inter text-xs uppercase tracking-[0.2em] text-ember">{product.category}</span>
 
-        <h3
-          className={`font-inter font-semibold text-ghost mt-2 ${
-            product.large ? 'text-2xl' : 'text-xl'
-          }`}
-        >
+        <h3 className={`font-inter font-semibold text-ghost mt-2 ${large ? 'text-2xl' : 'text-xl'}`}>
           {product.name}
         </h3>
 
-        {/* Red underline */}
         <div className="mt-2 w-8 h-px bg-blood group-hover:w-16 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" />
 
         <div className="mt-3 flex items-center gap-3">
-          <span className="font-inter text-lg text-white/90 font-bold">
-            {product.price}
-          </span>
-          <span className="font-inter text-lg text-white/30 line-through">
-            {product.originalPrice}
-          </span>
+          <span className="font-inter text-lg text-white/90 font-bold">{formatPrice(product.price)}</span>
+          {product.originalPrice && (
+            <span className="font-inter text-lg text-white/30 line-through">
+              {formatPrice(product.originalPrice)}
+            </span>
+          )}
         </div>
 
         {/* Add to Bag button - appears on hover */}
         <div className="mt-4 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
           <button
-            onClick={() =>
-              addItem({
-                id: product.id,
-                name: product.name,
-                category: product.category,
-                image: product.image,
-                price: parsePrice(product.price),
-                originalPrice: parsePrice(product.originalPrice),
-              })
-            }
-            className="bg-blood text-white rounded-full px-6 py-2 text-sm font-inter hover:bg-dark-blood transition-colors duration-300"
+            onClick={() => addItem(product, { size: defaultSize, color: product.colors[0]?.name })}
+            className="relative z-20 bg-blood text-white rounded-full px-6 py-2 text-sm font-inter hover:bg-dark-blood transition-colors duration-300"
           >
             Add to Bag
           </button>

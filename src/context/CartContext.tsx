@@ -2,37 +2,37 @@ import { createContext, useContext, useEffect, useMemo, useReducer } from 'react
 import { toast } from 'sonner';
 import type { CartItem, Product } from '@/types/product';
 
-const STORAGE_KEY = 'vampgen-cart';
+const STORAGE_KEY = 'vampgen-cart-v2';
 
 interface CartState {
   items: CartItem[];
 }
 
 type CartAction =
-  | { type: 'ADD'; product: Product }
-  | { type: 'REMOVE'; id: string }
-  | { type: 'SET_QTY'; id: string; quantity: number }
+  | { type: 'ADD'; item: CartItem }
+  | { type: 'REMOVE'; key: string }
+  | { type: 'SET_QTY'; key: string; quantity: number }
   | { type: 'CLEAR' };
 
 function reducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD': {
-      const existing = state.items.find((i) => i.id === action.product.id);
+      const existing = state.items.find((i) => i.key === action.item.key);
       if (existing) {
         return {
           items: state.items.map((i) =>
-            i.id === action.product.id ? { ...i, quantity: i.quantity + 1 } : i
+            i.key === action.item.key ? { ...i, quantity: i.quantity + action.item.quantity } : i
           ),
         };
       }
-      return { items: [...state.items, { ...action.product, quantity: 1 }] };
+      return { items: [...state.items, action.item] };
     }
     case 'REMOVE':
-      return { items: state.items.filter((i) => i.id !== action.id) };
+      return { items: state.items.filter((i) => i.key !== action.key) };
     case 'SET_QTY':
       return {
         items: state.items
-          .map((i) => (i.id === action.id ? { ...i, quantity: action.quantity } : i))
+          .map((i) => (i.key === action.key ? { ...i, quantity: action.quantity } : i))
           .filter((i) => i.quantity > 0),
       };
     case 'CLEAR':
@@ -42,8 +42,7 @@ function reducer(state: CartState, action: CartAction): CartState {
   }
 }
 
-// Read persisted cart synchronously so items are present on first paint
-// (avoids the empty-then-hydrate flash and the storage-overwrite race).
+// Read persisted cart synchronously so items are present on first paint.
 function init(): CartState {
   if (typeof window === 'undefined') return { items: [] };
   try {
@@ -54,13 +53,19 @@ function init(): CartState {
   }
 }
 
+export interface AddToCartOptions {
+  size?: string;
+  color?: string;
+  quantity?: number;
+}
+
 interface CartContextValue {
   items: CartItem[];
   totalItems: number;
   subtotal: number;
-  addItem: (product: Product) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  addItem: (product: Product, options?: AddToCartOptions) => void;
+  removeItem: (key: string) => void;
+  updateQuantity: (key: string, quantity: number) => void;
   clearCart: () => void;
 }
 
@@ -84,12 +89,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       items: state.items,
       totalItems,
       subtotal,
-      addItem: (product) => {
-        dispatch({ type: 'ADD', product });
+      addItem: (product, options) => {
+        const { size, color, quantity = 1 } = options ?? {};
+        const key = `${product.id}__${size ?? ''}__${color ?? ''}`;
+        dispatch({
+          type: 'ADD',
+          item: {
+            key,
+            productId: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0],
+            size,
+            color,
+            quantity,
+          },
+        });
         toast.success(`${product.name} added to your bag`);
       },
-      removeItem: (id) => dispatch({ type: 'REMOVE', id }),
-      updateQuantity: (id, quantity) => dispatch({ type: 'SET_QTY', id, quantity }),
+      removeItem: (key) => dispatch({ type: 'REMOVE', key }),
+      updateQuantity: (key, quantity) => dispatch({ type: 'SET_QTY', key, quantity }),
       clearCart: () => dispatch({ type: 'CLEAR' }),
     };
   }, [state.items]);

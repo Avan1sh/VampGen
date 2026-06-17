@@ -1,14 +1,8 @@
 import { useRef } from 'react';
+import { Link } from 'react-router';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
-const lookbookProducts = [
-  { name: 'Midnight Velvet Coat', price: '$129.99', image: '/images/lookbook-midnight-velvet.jpg' },
-  { name: 'Gothic Rose Dress', price: '$89.99', image: '/images/lookbook-gothic-rose.jpg' },
-  { name: 'Dark Academia Blazer', price: '$149.99', image: '/images/lookbook-dark-academia.jpg' },
-  { name: 'Raven Wing Cape', price: '$159.99', image: '/images/lookbook-raven-wing.jpg' },
-  { name: 'Crimson Moonlight Gown', price: '$199.99', image: '/images/lookbook-crimson-gown.jpg' },
-  { name: "Necromancer's Hooded Cloak", price: '$179.99', image: '/images/lookbook-necromancer-cloak.jpg' },
-];
+import { lookbookProducts } from '@/data/products';
+import { formatPrice, type Product } from '@/types/product';
 
 export default function LookbookSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,7 +13,6 @@ export default function LookbookSection() {
     offset: ['start start', 'end end'],
   });
 
-  // Mobile: no horizontal scroll, just show the strip
   // Desktop: map scroll progress to horizontal translation
   const x = useTransform(scrollYProgress, [0, 1], ['0%', '-60%']);
 
@@ -27,15 +20,10 @@ export default function LookbookSection() {
     <section id="lookbook" className="relative bg-void">
       {/* Section Header - Vertical on left edge */}
       <div className="hidden lg:flex absolute left-6 top-1/2 -translate-y-1/2 z-20 flex-col items-center gap-2">
-        <span className="font-inter text-xs text-white/30 tracking-[0.2em] uppercase">
-          01
-        </span>
+        <span className="font-inter text-xs text-white/30 tracking-[0.2em] uppercase">01</span>
         <span
           className="font-cinzel text-white/20 tracking-[0.15em] uppercase text-lg"
-          style={{
-            writingMode: 'vertical-rl',
-            transform: 'rotate(180deg)',
-          }}
+          style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
         >
           Lookbook
         </span>
@@ -47,20 +35,16 @@ export default function LookbookSection() {
           {/* Mobile: horizontal overflow scroll */}
           <div className="lg:hidden w-full overflow-x-auto scrollbar-hide px-6 py-16">
             <div className="flex gap-6" style={{ width: 'max-content' }}>
-              {lookbookProducts.map((product, i) => (
-                <LookbookCard key={i} product={product} />
+              {lookbookProducts.map((product) => (
+                <LookbookCard key={product.id} product={product} />
               ))}
             </div>
           </div>
 
           {/* Desktop: scroll-driven horizontal strip */}
-          <motion.div
-            ref={stripRef}
-            style={{ x }}
-            className="hidden lg:flex gap-6 px-24"
-          >
-            {lookbookProducts.map((product, i) => (
-              <LookbookCard key={i} product={product} />
+          <motion.div ref={stripRef} style={{ x }} className="hidden lg:flex gap-6 px-24">
+            {lookbookProducts.map((product) => (
+              <LookbookCard key={product.id} product={product} />
             ))}
           </motion.div>
         </div>
@@ -69,17 +53,16 @@ export default function LookbookSection() {
   );
 }
 
-function LookbookCard({
-  product,
-}: {
-  product: { name: string; price: string; image: string };
-}) {
+function LookbookCard({ product }: { product: Product }) {
   return (
-    <div className="group relative flex-shrink-0 w-[280px] lg:w-[320px] h-[65vh] lg:h-[70vh] border border-white/[0.08] overflow-hidden">
+    <Link
+      to={`/product/${product.id}`}
+      className="group relative block flex-shrink-0 w-[280px] lg:w-[320px] h-[65vh] lg:h-[70vh] border border-white/[0.08] overflow-hidden"
+    >
       {/* Image */}
       <div className="absolute inset-0 overflow-hidden">
         <img
-          src={product.image}
+          src={product.images[0]}
           alt={product.name}
           className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
           loading="lazy"
@@ -93,13 +76,11 @@ function LookbookCard({
         <p className="font-inter text-xs text-white/50 group-hover:text-white transition-colors duration-300 uppercase tracking-wider">
           {product.name}
         </p>
-        <p className="font-inter text-sm text-white/80 mt-1 font-medium">
-          {product.price}
-        </p>
+        <p className="font-inter text-sm text-white/80 mt-1 font-medium">{formatPrice(product.price)}</p>
       </div>
 
       {/* Red bottom line on hover */}
       <div className="absolute bottom-0 left-0 h-0.5 bg-blood w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" />
-    </div>
+    </Link>
   );
 }

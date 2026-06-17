@@ -45,29 +45,39 @@ export default function CartPage() {
             <div className="lg:col-span-2 flex flex-col">
               {items.map((item, i) => (
                 <motion.div
-                  key={item.id}
+                  key={item.key}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
                   className="flex gap-5 py-6 border-b border-white/5"
                 >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-24 h-32 object-cover rounded-md flex-shrink-0"
-                  />
+                  <Link to={`/product/${item.productId}`} className="shrink-0">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-32 object-cover rounded-md"
+                    />
+                  </Link>
                   <div className="flex-1 flex flex-col">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <span className="font-inter text-[10px] uppercase tracking-[0.2em] text-ember">
-                          {item.category}
-                        </span>
-                        <h3 className="font-inter font-semibold text-ghost text-lg mt-1">
+                        <Link
+                          to={`/product/${item.productId}`}
+                          className="font-inter font-semibold text-ghost text-lg hover:text-ember transition-colors"
+                        >
                           {item.name}
-                        </h3>
+                        </Link>
+                        <div className="mt-1 flex items-center gap-4 font-inter text-xs text-smoke">
+                          {item.size && (
+                            <span>Size: <span className="text-mist">{item.size}</span></span>
+                          )}
+                          {item.color && (
+                            <span>Colour: <span className="text-mist">{item.color}</span></span>
+                          )}
+                        </div>
                       </div>
                       <button
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => removeItem(item.key)}
                         className="text-smoke hover:text-blood transition-colors duration-300 p-1"
                         aria-label={`Remove ${item.name}`}
                       >
@@ -76,10 +86,9 @@ export default function CartPage() {
                     </div>
 
                     <div className="mt-auto flex items-end justify-between pt-4">
-                      {/* Quantity stepper */}
                       <div className="flex items-center border border-white/10 rounded-full">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.key, item.quantity - 1)}
                           className="w-9 h-9 flex items-center justify-center text-mist hover:text-ghost transition-colors"
                           aria-label="Decrease quantity"
                         >
@@ -89,7 +98,7 @@ export default function CartPage() {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.key, item.quantity + 1)}
                           className="w-9 h-9 flex items-center justify-center text-mist hover:text-ghost transition-colors"
                           aria-label="Increase quantity"
                         >
@@ -112,7 +121,6 @@ export default function CartPage() {
                 </motion.div>
               ))}
 
-              {/* Continue shopping / clear */}
               <div className="flex items-center justify-between mt-8">
                 <Link
                   to="/#featured"

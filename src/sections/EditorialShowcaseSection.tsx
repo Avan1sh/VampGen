@@ -1,6 +1,10 @@
 import { useRef } from 'react';
+import { Link } from 'react-router';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
+import { getProduct } from '@/data/products';
+
+const editorialProduct = getProduct('midnight-velvet-coat')!;
 
 const revealVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -136,22 +140,18 @@ export default function EditorialShowcaseSection() {
             >
               <button
                 onClick={() =>
-                  addItem({
-                    id: 'midnight-velvet-coat',
-                    name: 'Midnight Velvet Coat',
-                    category: 'Outerwear',
-                    image: '/images/lookbook-midnight-velvet.jpg',
-                    price: 129.99,
-                    originalPrice: 179.99,
-                  })
+                  addItem(editorialProduct, { size: 'M', color: editorialProduct.colors[0]?.name })
                 }
                 className="bg-blood text-white rounded-full px-8 py-3 font-inter text-sm hover:bg-dark-blood hover:shadow-[0_0_30px_rgba(220,38,38,0.3)] transition-all duration-300"
               >
                 Add to Bag
               </button>
-              <button className="border border-white/20 text-white/70 rounded-full px-8 py-3 font-inter text-sm hover:border-white/50 hover:text-white transition-all duration-300">
+              <Link
+                to={`/product/${editorialProduct.id}`}
+                className="border border-white/20 text-white/70 rounded-full px-8 py-3 font-inter text-sm hover:border-white/50 hover:text-white transition-all duration-300"
+              >
                 View Details
-              </button>
+              </Link>
             </motion.div>
 
             {/* Shipping info */}
