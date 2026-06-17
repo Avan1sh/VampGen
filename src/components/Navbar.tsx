@@ -5,10 +5,18 @@ import { ShoppingBag } from 'lucide-react';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { useCart } from '@/context/CartContext';
 
-const navLinks = [
+interface NavLinkDef {
+  name: string;
+  /** In-page hash target on the home route */
+  href?: string;
+  /** Dedicated route */
+  to?: string;
+}
+
+const navLinks: NavLinkDef[] = [
   { name: 'Home', href: '#hero' },
   { name: 'Lookbook', href: '#lookbook' },
-  { name: 'Shop', href: '#featured' },
+  { name: 'Shop', to: '/shop' },
   { name: 'Collections', href: '#worlds' },
 ];
 
@@ -27,6 +35,8 @@ export default function Navbar() {
   const location = useLocation();
   const { totalItems } = useCart();
 
+  const isHome = location.pathname === '/';
+
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = 'hidden';
@@ -36,21 +46,25 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
-  const handleNavClick = (e: React.MouseEvent, href: string, name: string) => {
+  const handleHashClick = (e: React.MouseEvent, href: string, name: string) => {
     e.preventDefault();
     setActiveSection(name);
     setMobileOpen(false);
-    // If we're on another route (e.g. the cart), go home first — HomePage
-    // smooth-scrolls to the hash once it has mounted.
-    if (location.pathname !== '/') {
+    // If we're on another route, go home first — HomePage scrolls to the hash on mount.
+    if (!isHome) {
       navigate('/' + href);
       return;
     }
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const isActive = (link: NavLinkDef) =>
+    link.to ? location.pathname.startsWith(link.to) : isHome && activeSection === link.name;
+
+  const linkClass = (active: boolean) =>
+    `nav-link-underline font-inter text-xs uppercase tracking-[0.2em] transition-colors duration-300 ${
+      active ? 'text-white' : 'text-white/60 hover:text-white'
+    }`;
 
   return (
     <>
@@ -63,31 +77,40 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo */}
-          <a
-            href="#hero"
-            onClick={(e) => handleNavClick(e, '#hero', 'Home')}
+          <Link
+            to="/"
+            onClick={() => { setActiveSection('Home'); setMobileOpen(false); }}
             className="flex items-center gap-2 group"
           >
             <BatIcon />
             <span className="font-cinzel text-ghost text-lg tracking-[0.15em] uppercase transition-all duration-300 group-hover:[text-shadow:0_0_20px_rgba(220,38,38,0.4)]">
               VAMPGEN
             </span>
-          </a>
+          </Link>
 
           {/* Center Nav Links - Desktop */}
           <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href, link.name)}
-                className={`nav-link-underline font-inter text-xs uppercase tracking-[0.2em] transition-colors duration-300 ${
-                  activeSection === link.name ? 'text-white' : 'text-white/60 hover:text-white'
-                }`}
-              >
-                {link.name}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.to ? (
+                <Link
+                  key={link.name}
+                  to={link.to}
+                  onClick={() => setMobileOpen(false)}
+                  className={linkClass(isActive(link))}
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => handleHashClick(e, link.href!, link.name)}
+                  className={linkClass(isActive(link))}
+                >
+                  {link.name}
+                </a>
+              )
+            )}
           </div>
 
           {/* Right actions */}
@@ -116,14 +139,14 @@ export default function Navbar() {
               </AnimatePresence>
             </Link>
 
-            {/* Shop Now CTA - Desktop */}
-            <a
-              href="#featured"
-              onClick={(e) => handleNavClick(e, '#featured', 'Shop')}
+            {/* Shop CTA - Desktop */}
+            <Link
+              to="/shop"
+              onClick={() => setMobileOpen(false)}
               className="hidden lg:inline-flex items-center border border-blood/40 text-ember px-6 py-2 rounded-full text-xs font-inter uppercase tracking-[0.15em] transition-all duration-400 hover:bg-blood hover:text-white hover:border-blood hover:shadow-[0_0_25px_rgba(220,38,38,0.4)]"
             >
               Shop Now
-            </a>
+            </Link>
 
             {/* Mobile Hamburger */}
             <button
@@ -156,19 +179,27 @@ export default function Navbar() {
               &#10005;
             </button>
             <div className="flex flex-col items-center gap-8">
-              {navLinks.map((link, i) => (
-                <motion.a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href, link.name)}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-cinzel text-4xl text-white/80 hover:text-blood transition-colors duration-300"
-                >
-                  {link.name}
-                </motion.a>
-              ))}
+              {navLinks.map((link, i) => {
+                const cls = 'font-cinzel text-4xl text-white/80 hover:text-blood transition-colors duration-300';
+                return (
+                  <motion.div
+                    key={link.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {link.to ? (
+                      <Link to={link.to} onClick={() => setMobileOpen(false)} className={cls}>
+                        {link.name}
+                      </Link>
+                    ) : (
+                      <a href={link.href} onClick={(e) => handleHashClick(e, link.href!, link.name)} className={cls}>
+                        {link.name}
+                      </a>
+                    )}
+                  </motion.div>
+                );
+              })}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -182,16 +213,6 @@ export default function Navbar() {
                   Bag{totalItems > 0 ? ` (${totalItems})` : ''}
                 </Link>
               </motion.div>
-              <motion.a
-                href="#featured"
-                onClick={(e) => handleNavClick(e, '#featured', 'Shop')}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="mt-4 border border-blood/40 text-ember px-8 py-3 rounded-full text-sm font-inter uppercase tracking-[0.15em] hover:bg-blood hover:text-white hover:border-blood transition-all duration-400"
-              >
-                Shop Now
-              </motion.a>
             </div>
           </motion.div>
         )}

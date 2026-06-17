@@ -1,37 +1,14 @@
 import { useRef } from 'react';
+import { Link } from 'react-router';
 import { motion, useInView } from 'framer-motion';
-
-const categories = [
-  {
-    name: 'DARK ACADEMIA',
-    tagline: 'Intellect meets shadow',
-    image: '/images/world-dark-academia.jpg',
-  },
-  {
-    name: 'VAMPIRE CHIC',
-    tagline: 'Eternal elegance',
-    image: '/images/world-vampire-chic.jpg',
-  },
-  {
-    name: 'GOTHIC STREET',
-    tagline: 'Urban darkness',
-    image: '/images/world-gothic-street.jpg',
-  },
-  {
-    name: 'VICTORIAN ROMANCE',
-    tagline: 'Love in the ruins',
-    image: '/images/world-victorian-romance.jpg',
-  },
-];
+import { worlds, type World } from '@/data/products';
 
 const titleLetters = 'SHOP BY WORLD'.split('');
 
 const cardContainerVariants = {
   hidden: {},
   visible: {
-    transition: {
-      staggerChildren: 0.15,
-    },
+    transition: { staggerChildren: 0.15 },
   },
 };
 
@@ -63,14 +40,10 @@ export default function ShopByWorldSection() {
                 key={i}
                 initial={{ opacity: 0, y: 40 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-                transition={{
-                  delay: i * 0.04,
-                  duration: 0.6,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
+                transition={{ delay: i * 0.04, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="inline-block"
               >
-                {letter === ' ' ? '\u00A0' : letter}
+                {letter === ' ' ? ' ' : letter}
               </motion.span>
             ))}
           </h2>
@@ -92,8 +65,8 @@ export default function ShopByWorldSection() {
           animate={isInView ? 'visible' : 'hidden'}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          {categories.map((category, i) => (
-            <CategoryCard key={i} category={category} />
+          {worlds.map((world) => (
+            <CategoryCard key={world.slug} world={world} />
           ))}
         </motion.div>
       </div>
@@ -101,44 +74,40 @@ export default function ShopByWorldSection() {
   );
 }
 
-function CategoryCard({
-  category,
-}: {
-  category: (typeof categories)[0];
-}) {
+function CategoryCard({ world }: { world: World }) {
   return (
-    <motion.div
-      variants={cardVariants}
-      className="group relative aspect-[3/4] min-h-[400px] overflow-hidden rounded-lg"
-    >
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <img
-          src={category.image}
-          alt={category.name}
-          className="w-full h-full object-cover grayscale-[60%] brightness-[0.4] group-hover:grayscale-0 group-hover:brightness-[0.7] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]"
-          loading="lazy"
-        />
-      </div>
+    <motion.div variants={cardVariants}>
+      <Link
+        to={`/world/${world.slug}`}
+        className="group relative block aspect-[3/4] min-h-[400px] overflow-hidden rounded-lg"
+      >
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={world.image}
+            alt={world.name}
+            className="w-full h-full object-cover grayscale-[60%] brightness-[0.4] group-hover:grayscale-0 group-hover:brightness-[0.7] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]"
+            loading="lazy"
+          />
+        </div>
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-      {/* Red left border on hover */}
-      <div className="absolute bottom-0 left-0 w-0.5 bg-blood h-0 group-hover:h-full transition-all duration-400 ease-out" />
+        {/* Red left border on hover */}
+        <div className="absolute bottom-0 left-0 w-0.5 bg-blood h-0 group-hover:h-full transition-all duration-400 ease-out" />
 
-      {/* Bottom Content */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-        <h3 className="font-cinzel text-xl text-ghost mb-1">
-          {category.name}
-        </h3>
-        <p className="font-inter text-xs text-white/40 uppercase tracking-wider flex items-center gap-2">
-          {category.tagline}
-          <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
-            &rarr;
-          </span>
-        </p>
-      </div>
+        {/* Bottom Content */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+          <h3 className="font-cinzel text-xl text-ghost mb-1">{world.name}</h3>
+          <p className="font-inter text-xs text-white/40 uppercase tracking-wider flex items-center gap-2">
+            {world.tagline}
+            <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
+              &rarr;
+            </span>
+          </p>
+        </div>
+      </Link>
     </motion.div>
   );
 }

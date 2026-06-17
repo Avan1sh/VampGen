@@ -6,6 +6,8 @@ import CustomCursor from '@/components/CustomCursor';
 import FilmGrainOverlay from '@/components/FilmGrainOverlay';
 import Footer from '@/components/Footer';
 import HomePage from '@/pages/HomePage';
+import ShopPage from '@/pages/ShopPage';
+import WorldPage from '@/pages/WorldPage';
 import ProductDetailPage from '@/pages/ProductDetailPage';
 import CartPage from '@/pages/CartPage';
 
@@ -20,6 +22,8 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/world/:slug" element={<WorldPage />} />
         <Route path="/product/:slug" element={<ProductDetailPage />} />
         <Route path="/cart" element={<CartPage />} />
       </Routes>

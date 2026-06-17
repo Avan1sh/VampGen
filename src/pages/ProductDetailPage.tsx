@@ -70,7 +70,7 @@ function ProductView({ product }: { product: Product }) {
           <span>/</span>
           {world && (
             <>
-              <Link to="/#worlds" className="hover:text-ghost transition-colors">{world.name}</Link>
+              <Link to={`/world/${world.slug}`} className="hover:text-ghost transition-colors">{world.name}</Link>
               <span>/</span>
             </>
           )}
