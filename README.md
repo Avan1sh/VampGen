@@ -1,119 +1,73 @@
-# 🧛‍♀️ VampGen - Gothic GenZ Fashion
+# React + TypeScript + Vite
 
-**VampGen** is a cutting-edge e-commerce platform designed for GenZ fashion enthusiasts who embrace the dark aesthetic. We specialize in vampire-inspired, gothic, and alternative clothing that speaks to the soul of modern youth culture.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🌙 About VampGen
+Currently, two official plugins are available:
 
-VampGen bridges the gap between classic gothic fashion and contemporary GenZ style. Our curated collection features:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- **Vampire-inspired clothing** with modern twists
-- **Dark academia aesthetics** for the intellectually inclined
-- **Gothic streetwear** that makes a statement
-- **Alternative fashion** for those who dare to be different
-- **Accessories** that complete your dark aesthetic
+## React Compiler
 
-Whether you're channeling your inner Dracula or embracing the dark academia trend, VampGen has the perfect pieces to express your unique style.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## ✨ Features
+## Expanding the ESLint configuration
 
-- 🎨 **Interactive Design Generator** - Create custom vampire-themed clothing designs
-- 👤 **User Authentication** - Secure login and signup with personalized experience
-- 📱 **Responsive Design** - Optimized for all devices and screen sizes
-- 🌙 **Dark Theme UI** - Gothic-inspired interface with vampire castle backgrounds
-- 🛒 **E-commerce Ready** - Built for seamless online shopping experience
-- 🎭 **Style Gallery** - Showcase of vampire and gothic fashion inspiration
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## 🛠️ Technologies Used
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-- **[Next.js 15](https://nextjs.org/)** - React framework for production
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[React Hooks](https://reactjs.org/docs/hooks-intro.html)** - Modern state management
-- **[Heroicons](https://heroicons.com/)** - Beautiful hand-crafted SVG icons
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-Make sure you have Node.js installed on your machine.
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Avan1sh/VampGen.git
-   cd VampGen
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000) to see VampGen in action.
-
-## 🎯 Project Structure
-
-```
-VampGen/
-├── app/                 # Next.js app directory
-├── components/          # Reusable React components
-│   ├── navbar.tsx      # Custom navigation with vampire theme
-│   └── AuthModal.tsx   # Authentication modal
-├── hooks/              # Custom React hooks
-├── utils/              # Utility functions
-├── styles/             # Global styles and Tailwind config
-└── public/             # Static assets including vampire backgrounds
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-## 🌟 Key Components
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-- **Custom Navbar** - Gothic-themed navigation with vampire castle background
-- **Authentication System** - Modal-based login/signup with form validation
-- **Responsive Design** - Mobile-first approach with dark aesthetic
-- **Type Safety** - Full TypeScript implementation for robust development
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-## 🎨 Design Philosophy
-
-VampGen embraces the gothic aesthetic while maintaining modern usability:
-
-- **Dark Color Palette** - Deep purples, blood reds, and midnight blacks
-- **Vampire Imagery** - Subtle castle and gothic architecture backgrounds
-- **Modern UX** - Clean, intuitive interface despite the dark theme
-- **GenZ Appeal** - Trendy, social media-ready design elements
-
-## 🛒 E-commerce Features (Coming Soon)
-
-- Product catalog with vampire-themed clothing
-- Shopping cart and checkout system
-- User profiles and order history
-- Wishlist and favorites
-- Size guides and fit recommendations
-- Gothic style blog and fashion tips
-
-## 🤝 Contributing
-
-We welcome contributions from fellow gothic fashion enthusiasts! Please feel free to:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🧛‍♂️ Connect With Us
-
-Join the VampGen community and stay updated with the latest in gothic GenZ fashion!
-
----
-
-*"Embrace the darkness, express your style."* - VampGen
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
