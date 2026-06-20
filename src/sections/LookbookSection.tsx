@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { lookbookProducts } from '@/data/products';
@@ -6,15 +6,29 @@ import { formatPrice, type Product } from '@/types/product';
 
 export default function LookbookSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const stripRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [distance, setDistance] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   });
 
-  // Desktop: map scroll progress to horizontal translation
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-60%']);
+  // Translate the track exactly far enough to reveal its final card.
+  const x = useTransform(scrollYProgress, [0, 1], [0, -distance]);
+
+  // Measure the real overflow so the scroll-driven effect is correct at any
+  // screen width (phone, laptop or ultra-wide) — no breakpoint fallback.
+  useLayoutEffect(() => {
+    const measure = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      setDistance(Math.max(0, track.scrollWidth - window.innerWidth));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
 
   return (
     <section id="lookbook" className="relative bg-void">
@@ -29,20 +43,14 @@ export default function LookbookSection() {
         </span>
       </div>
 
-      {/* Sticky Scroll Container */}
-      <div ref={containerRef} className="relative h-[300vh] lg:h-[400vh]">
+      {/* Tall container drives the scroll; the track is pinned and slides sideways */}
+      <div ref={containerRef} className="relative" style={{ height: `calc(100vh + ${distance}px)` }}>
         <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-          {/* Mobile: horizontal overflow scroll */}
-          <div className="lg:hidden w-full overflow-x-auto scrollbar-hide px-6 py-16">
-            <div className="flex gap-6" style={{ width: 'max-content' }}>
-              {lookbookProducts.map((product) => (
-                <LookbookCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop: scroll-driven horizontal strip */}
-          <motion.div ref={stripRef} style={{ x }} className="hidden lg:flex gap-6 px-24">
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
+            className="flex gap-6 px-6 lg:px-24 will-change-transform"
+          >
             {lookbookProducts.map((product) => (
               <LookbookCard key={product.id} product={product} />
             ))}
